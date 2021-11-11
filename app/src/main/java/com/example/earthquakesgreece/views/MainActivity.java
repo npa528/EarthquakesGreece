@@ -1,4 +1,4 @@
-package com.example.earthquakesgreece;
+package com.example.earthquakesgreece.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -7,39 +7,45 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.example.earthquakesgreece.R;
+import com.example.earthquakesgreece.viewmodels.ServiceViewModel;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import lombok.SneakyThrows;
 
 public class MainActivity extends AppCompatActivity {
 
     // Initialize variables
     SwipeRefreshLayout swipeRefreshLayout;
     ListView quakes;
-    TextView tvCount;
     ArrayList<Integer> arrayList;
     ArrayAdapter<Integer> arrayAdapter;
 
-
+    @SneakyThrows
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Context context = getApplicationContext();
-        Service fetchData = new Service();
-        fetchData.getData(context);
+        ServiceViewModel sm = new ServiceViewModel();
+//        fetchData.getData(context, () -> {});
+
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+
+        sm.readXML(context);
 
         // Assign variables
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         quakes = findViewById(R.id.listQuakes);
-        tvCount = findViewById(R.id.test);
 
         // Initialize array list
         arrayList = new ArrayList<>();
 
-        // Set count on text  view
-        tvCount.setText("Total count:" + arrayList.size());
 
         // Initialize array adapter
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
@@ -48,14 +54,18 @@ public class MainActivity extends AppCompatActivity {
         quakes.setAdapter(arrayAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @SneakyThrows
             @Override
             public void onRefresh() {
                 // When refresh, add value in array list
-                arrayList.add(arrayList.size() + 1);
+//                fetchData.getData(context, () -> {});
+//                arrayList.add(arrayList.size() + 1);
+
+                fetchData.readXML(context);
+
                 // Notify adapter
                 arrayAdapter.notifyDataSetChanged();
-                // Set next count on text view
-                tvCount.setText("Total count: " + arrayList.size());
+
                 // Dismiss refreshing dialogue
                 swipeRefreshLayout.setRefreshing(false);
 

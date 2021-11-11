@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".views.MainActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -20,17 +20,6 @@
             android:layout_height="match_parent"
             tools:listitem="@android:layout/simple_list_item_1" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/test"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="8dp"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:background="@color/design_default_color_on_primary"/>
 
 </LinearLayout>
 
