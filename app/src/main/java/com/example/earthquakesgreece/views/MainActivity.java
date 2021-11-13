@@ -1,12 +1,12 @@
 package com.example.earthquakesgreece.views;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.earthquakesgreece.R;
 import com.example.earthquakesgreece.viewmodels.ServiceViewModel;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         ServiceViewModel sm = new ServiceViewModel();
-//        fetchData.getData(context, () -> {});
+//        sm.getData(context, () -> {});
 
         ExecutorService executorService = Executors.newFixedThreadPool(4);
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 //                fetchData.getData(context, () -> {});
 //                arrayList.add(arrayList.size() + 1);
 
-                fetchData.readXML(context);
+                sm.readXML(context);
 
                 // Notify adapter
                 arrayAdapter.notifyDataSetChanged();

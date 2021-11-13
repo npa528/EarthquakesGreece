@@ -29,21 +29,11 @@ import lombok.SneakyThrows;
 
 public class ServiceViewModel {
 
-
-    private final ServiceRepository serviceRepository;
-
-    public ServiceViewModel(ServiceRepository serviceRepository) {
-        this.serviceRepository = serviceRepository;
-    }
-
-
-
     public void readXML(Context context) throws IOException, XmlPullParserException {
 
         final InputStream inputStream = context.getResources().openRawResource(R.raw.quakeml);
         QuakemlParser qml = new QuakemlParser();
         qml.parse(inputStream);
-
     }
 
     public void getData(Context context, final ResponseCallback callBack) {

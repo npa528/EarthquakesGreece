@@ -8,6 +8,9 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import lombok.Getter;
@@ -19,10 +22,10 @@ public class Quake {
     private final String regionName;
 
     @Getter
-    private final Date date;
+    private final LocalDateTime date;
 
     @Getter
-    private final int magnitude;
+    private final float magnitude;
 
     @Getter
     private final int depth;
@@ -34,17 +37,16 @@ public class Quake {
     private final float latitude;
 
 
-    public Quake(String regionName, Date date, int magnitude, int depth, float longitude, float latitude) {
+    public Quake(String regionName, String date, float magnitude, int depth, float longitude, float latitude) {
         this.regionName = regionName;
-        this.date = date;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        this.date = LocalDateTime.parse(date, formatter);
         this.magnitude = magnitude;
         this.depth = depth;
         this.longitude = longitude;
         this.latitude = latitude;
     }
-
-
-
 
 //    @NonNull
 //    @Override
