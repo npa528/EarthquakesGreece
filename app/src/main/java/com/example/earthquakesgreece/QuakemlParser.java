@@ -25,6 +25,7 @@ public class QuakemlParser implements Runnable {
     @Setter
     private InputStream inputStream;
 
+
     @SneakyThrows
     @Override
     public void run() {

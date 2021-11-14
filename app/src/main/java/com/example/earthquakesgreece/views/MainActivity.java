@@ -12,8 +12,6 @@ import com.example.earthquakesgreece.R;
 import com.example.earthquakesgreece.viewmodels.ServiceViewModel;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import lombok.SneakyThrows;
 
@@ -33,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         ServiceViewModel sm = new ServiceViewModel();
+
 //        sm.getData(context, () -> {});
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
 
         sm.readXML(context);
 

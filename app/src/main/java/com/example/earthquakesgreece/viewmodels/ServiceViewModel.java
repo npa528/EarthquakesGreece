@@ -12,10 +12,19 @@ import com.example.earthquakesgreece.Constants;
 import com.example.earthquakesgreece.QuakemlParser;
 import com.example.earthquakesgreece.R;
 import com.example.earthquakesgreece.ResponseCallback;
+import com.example.earthquakesgreece.model.Quake;
+
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 public class ServiceViewModel {
+
+    @Getter
+    private final List<Quake> quakes= new ArrayList<Quake>();
 
     public void readXML(Context context) {
 
