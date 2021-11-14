@@ -58,10 +58,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 // When refresh, add value in array list
-//                fetchData.getData(context, () -> {});
-//                arrayList.add(arrayList.size() + 1);
+                arrayList.add(arrayList.size() + 1);
 
-                sm.readXML(context);
+//                sm.readXML(context);
 
                 // Notify adapter
                 arrayAdapter.notifyDataSetChanged();

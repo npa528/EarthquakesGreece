@@ -11,32 +11,37 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
 
-public class QuakemlParser {
+public class QuakemlParser implements Runnable {
 
     @Getter
     private final List<Quake> quakes= new ArrayList<Quake>();
 
-    public List<Quake> parse(InputStream in) throws XmlPullParserException, IOException {
+    @Setter
+    private InputStream inputStream;
+
+    @SneakyThrows
+    @Override
+    public void run() {
 
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
+            parser.setInput(inputStream, null);
             parser.nextTag();
-            return readFeed(parser);
+            readFeed(parser);
 
         } finally {
-            in.close();
+            inputStream.close();
         }
     }
 
-    private List<Quake> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List<Quake> events = new ArrayList();
+    private void readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.getEventType() != XmlPullParser.START_TAG || parser.getName().equals(Parameters.EVENTPARAMETERS_TAG)) {
@@ -44,13 +49,11 @@ public class QuakemlParser {
             }
 
             String name = parser.getName();
-
             // Starts by looking for the entry tag
             if (name.equals(Parameters.EVENT_TAG)) {
-                events.add(readEvent(parser));
+                quakes.add(readEvent(parser));
             }
         }
-        return events;
     }
 
 
@@ -64,7 +67,6 @@ public class QuakemlParser {
         int depth = 0;
         float longitude = 0;
         float latitude = 0;
-        HashMap<String, String> values = new HashMap<>();
 
         int eventType = parser.next();
 
