@@ -11,38 +11,43 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 
-public class QuakemlParser implements Runnable {
+public class QuakemlParser {
 
     @Getter
-    private final List<Quake> quakes= new ArrayList<Quake>();
+    private final ArrayList<Quake> quakes= new ArrayList<>();
+
 
     @Setter
     private InputStream inputStream;
 
+//    @Override
+//    public ArrayList<Quake> getListQuakes() {
+//        return quakes;
+//    }
 
-    @SneakyThrows
-    @Override
-    public void run() {
+
+
+    public void startParser() throws XmlPullParserException, IOException {
 
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(inputStream, null);
             parser.nextTag();
-            readFeed(parser);
+            readQuakeML(parser);
 
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             inputStream.close();
         }
     }
 
-    private void readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private void readQuakeML(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.getEventType() != XmlPullParser.START_TAG || parser.getName().equals(Parameters.EVENTPARAMETERS_TAG)) {
@@ -69,12 +74,21 @@ public class QuakemlParser implements Runnable {
         float longitude = 0;
         float latitude = 0;
 
-        int eventType = parser.next();
+        parser.require(XmlPullParser.START_TAG, null, Parameters.EVENT_TAG);
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
 
-        while (eventType != XmlPullParser.END_DOCUMENT ) {
+            if (parser.getName() == null) {
+                continue;
+            }
 
-            // check for the parent tag
-            while (eventType == XmlPullParser.START_TAG) {
+            if (parser.getEventType() == XmlPullParser.END_TAG && parser.getName().equals(Parameters.EVENT_TAG)) {
+                if (BuildConfig.DEBUG) Log.d("Quake","Event tag reached - create Quake ");
+                break;
+            }
+
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
 
                 if (parser.getName().equals(Parameters.DESCRIPTION_TAG)) {
                     region = getValue(parser, Parameters.DESCRIPTION_TEXT_TAG);
@@ -109,13 +123,8 @@ public class QuakemlParser implements Runnable {
                     depth /= 1000;
                     if (BuildConfig.DEBUG) Log.d("Quake","Depth = " +depth);
                 }
-
-                eventType = parser.next();
-
-            }
-
-            eventType = parser.next();
         }
+
         return new Quake(region, date, mag, depth, longitude, latitude);
     }
 

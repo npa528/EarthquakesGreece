@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Earthquakes Greece</string>
+    <string name="magnitude">magnitude</string>
+    <string name="place">place</string>
+    <string name="date">date</string>
+    <string name="region">region</string>
 </resources>

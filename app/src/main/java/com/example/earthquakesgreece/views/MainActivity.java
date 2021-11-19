@@ -2,13 +2,14 @@ package com.example.earthquakesgreece.views;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.earthquakesgreece.R;
+import com.example.earthquakesgreece.model.Quake;
+import com.example.earthquakesgreece.model.QuakeListAdapter;
 import com.example.earthquakesgreece.viewmodels.ServiceViewModel;
 
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     ListView quakes;
     ArrayList<Integer> arrayList;
-    ArrayAdapter<Integer> arrayAdapter;
+    ArrayList<Quake> callbackQuakes = new ArrayList<>();
+    ServiceViewModel serviceViewModel;
 
     @SneakyThrows
     @Override
@@ -30,12 +32,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Context context = getApplicationContext();
-        ServiceViewModel sm = new ServiceViewModel();
+        serviceViewModel = new ServiceViewModel(context);
 
-//        sm.getData(context, () -> {});
+        Thread thread = new Thread(serviceViewModel);
+        thread.start();
+        thread.join();
 
+        callbackQuakes = serviceViewModel.getQuakes();
 
-        sm.readXML(context);
+//        serviceViewModel.readXML(context);
+
 
         // Assign variables
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
@@ -45,29 +51,38 @@ public class MainActivity extends AppCompatActivity {
         arrayList = new ArrayList<>();
 
 
-        // Initialize array adapter
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
-
+        QuakeListAdapter quakeAdapter = new QuakeListAdapter(this, R.layout.quakes_list, callbackQuakes);
         // Set adapter
-        quakes.setAdapter(arrayAdapter);
+        quakes.setAdapter(quakeAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @SneakyThrows
-            @Override
-            public void onRefresh() {
-                // When refresh, add value in array list
-                arrayList.add(arrayList.size() + 1);
 
-//                sm.readXML(context);
 
-                // Notify adapter
-                arrayAdapter.notifyDataSetChanged();
+        // Initialize array adapter
+//        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
+//        // Set adapter
+//        quakes.setAdapter(arrayAdapter);
 
-                // Dismiss refreshing dialogue
-                swipeRefreshLayout.setRefreshing(false);
 
-            }
-        });
+
+
+
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @SneakyThrows
+//            @Override
+//            public void onRefresh() {
+//                // When refresh, add value in array list
+//                arrayList.add(arrayList.size() + 1);
+//
+////                sm.readXML(context);
+//
+//                // Notify adapter
+//                arrayAdapter.notifyDataSetChanged();
+//
+//                // Dismiss refreshing dialogue
+//                swipeRefreshLayout.setRefreshing(false);
+//
+//            }
+//        });
 
     }
 }
