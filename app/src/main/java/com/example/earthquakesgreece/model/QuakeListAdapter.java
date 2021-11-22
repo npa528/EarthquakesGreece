@@ -33,8 +33,10 @@ public class QuakeListAdapter extends ArrayAdapter<Quake> {
 
         String region = getItem(position).getRegionName();
         LocalDateTime date = getItem(position).getDate();
-        int depth = getItem(position).getDepth();
-        float magnitude = getItem(position).getMagnitude();
+        String dateString = getItem(position).getFormatedDate();
+
+        double depth = getItem(position).getDepth();
+        double magnitude = getItem(position).getMagnitude();
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -46,10 +48,13 @@ public class QuakeListAdapter extends ArrayAdapter<Quake> {
         TextView tvRegion = (TextView) convertView.findViewById(R.id.region);
         TextView tvDate = (TextView) convertView.findViewById(R.id.date);
         TextView tvMagnitude = (TextView) convertView.findViewById(R.id.magnitude);
+        TextView tvDepth = (TextView) convertView.findViewById(R.id.depth);
 
         tvRegion.setText(region);
-        tvDate.setText(date.toString());
-        tvMagnitude.setText(Float.toString(magnitude));
+        tvDate.setText(dateString);
+
+        tvMagnitude.setText(String.valueOf(magnitude));
+        tvDepth.setText(String.valueOf(depth).concat(" Km"));
 
         return convertView;
     }

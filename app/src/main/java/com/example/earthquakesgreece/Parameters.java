@@ -2,38 +2,42 @@ package com.example.earthquakesgreece;
 
 public interface Parameters {
 
-    public static final String MINLAT = "34.245454";
-    public static final String MAXLAT  = "41.744376";
-    public static final String MINLONG = "19.359372";
-    public static final String MAXLONG = "29.664913";
-    public static final String FORMATREPONSE = "xml";
+    /* QUAKEML PARAMETERS */
+    String EVENTPARAMETERS_TAG = "eventParameters";
+    String EVENT_TAG = "event";
+    String EVENT_PUBLICID_TAG = "publicID";
+    String DESCRIPTION_TAG = "description";
+    String DESCRIPTION_TEXT_TAG = "text";
+    String MAGNITUDE_TAG = "magnitude";
+    String VALUE_TAG = "value";
+    String ORIGIN_TAG = "origin";
+    String LONGITUDE_TAG = "longitude";
+    String LATITUDE_TAG = "latitude";
+    String DEPTH_TAG = "depth";
+    String PREFERREDMAG_TAG = "preferredMagnitudeID";
+    String TYPE_TAG = "type";
+    String EARTHQUAKE_VALUE = "earthquake";
 
 
-    public static final String QUAKEML_TAG = "q:quakeml";
-    public static final String EVENTPARAMETERS_TAG = "eventParameters";
-    public static final String EVENT_TAG = "event";
+    /* URL PARAMETERS */
+    String STARTTIME = "starttime";
+    String ENDTIME = "endtime";
+    String MINLAT = "minlatitude";
+    String MAXLAT = "maxlatitude";
+    String MINLONG = "minlongitude";
+    String MAXLONG = "maxlongitude";
+    String FORMAT = "format";
 
-    public static final String DESCRIPTION_TAG = "description";
-    public static final String DESCRIPTION_TEXT_TAG = "text";
+    String HTTPS = "https";
+    String BASEURL = "eida.gein.noa.gr";
+    String PATH_FDSNWS = "fdsnws";
+    String PATH_EVENT = "event";
+    String PATH_1 = "1";
+    String PATH_QUERY = "query";
 
-    public static final String CREATIONINFO_TAG = "creationInfo";
-    public static final String CREATIONTIME_TAG = "creationTime";
-
-    public static final String MAGNITUDE_TAG = "magnitude";
-    public static final String MAGNITUDE_CREATION_INFO_TAG = "creationInfo";
-    public static final String MAGNITUDE_CREATION_TIME_TAG = "creationTime";
-    public static final String MAGNITUDE_MAG_TAG = "mag";
-    public static final String VALUE_TAG = "value";
-
-    public static final String ORIGIN_TAG = "origin";
-    public static final String TIME_TAG = "time";
-    public static final String LONGITUDE_TAG = "longitude";
-    public static final String LATITUDE_TAG = "latitude";
-
-    public static final String DEPTH_TAG = "depth";
-
-
+    /* Params Coordinates for Greece */
+    String MINLAT_GREECE = "34.245454";
+    String MAXLAT_GREECE = "41.744376";
+    String MINLONG_GREECE = "19.359372";
+    String MAXLONG_GREECE = "29.664913";
 }
-
-// Use
-//textView.setText(Constants.MINLAT);

@@ -4,4 +4,7 @@
     <string name="place">place</string>
     <string name="date">date</string>
     <string name="region">region</string>
+    <string name="depth">depth</string>
+    <string name="Mag">StaffId</string>
+    <string name="magnitudeLabel">Mag</string>
 </resources>

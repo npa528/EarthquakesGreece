@@ -1,22 +1,14 @@
 package com.example.earthquakesgreece.model;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class Quake {
+
+    @Getter
+    private final String eventId;
 
     @Getter
     private final String regionName;
@@ -25,10 +17,13 @@ public class Quake {
     private final LocalDateTime date;
 
     @Getter
-    private final float magnitude;
+    private final String formatedDate;
 
     @Getter
-    private final int depth;
+    private final double magnitude;
+
+    @Getter
+    private final double depth;
 
     @Getter
     private final float longitude;
@@ -37,20 +32,26 @@ public class Quake {
     private final float latitude;
 
 
-    public Quake(String regionName, String date, float magnitude, int depth, float longitude, float latitude) {
+    public Quake(String eventId, String regionName, String date, double magnitude, double depth, float longitude, float latitude) {
+        this.eventId = eventId;
         this.regionName = regionName;
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd HH:mm:ss");
         this.date = LocalDateTime.parse(date, formatter);
-        this.magnitude = magnitude;
-        this.depth = depth;
+
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        this.formatedDate = this.date.format(formatter2);
+
+        this.magnitude = round(magnitude, 1);
+        this.depth = round(depth, 1);
+
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-//    @NonNull
-//    @Override
-//    public String toString() {
-//        return " Region = "+regionName + "\n Mag= " + magnitude + "\n Depth= " + depth;
-//    }
+    private static double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
 }
