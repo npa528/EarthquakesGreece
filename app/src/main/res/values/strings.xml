@@ -7,4 +7,5 @@
     <string name="depth">depth</string>
     <string name="Mag">StaffId</string>
     <string name="magnitudeLabel">Mag</string>
+    <string name="title_activity_quake_details">QuakeDetails</string>
 </resources>

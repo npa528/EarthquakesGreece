@@ -2,8 +2,8 @@ package com.example.earthquakesgreece.viewmodels;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -26,18 +26,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 
-import lombok.Getter;
 import lombok.SneakyThrows;
 
 public class ServiceViewModel implements Runnable, ResponseCallback {
 
-    @Getter
-//    private final ArrayList<Quake> quakes = new ArrayList<>();
-
     private final LinkedHashMap<String, Quake> quakes = new LinkedHashMap<>();
-
     private final Context context;
-
     private ResponseCallback callback;
 
     public ServiceViewModel (Context context) {
@@ -53,71 +47,71 @@ public class ServiceViewModel implements Runnable, ResponseCallback {
     @Override
     public void run() {
 
-        Handler mainHandler = new Handler(context.getMainLooper());
-
         RequestQueue queue = Volley.newRequestQueue(context);
 //        String url ="https://eida.gein.noa.gr/fdsnws/event/1/query?starttime=2021-09-28T00:00:00&endtime=2021-09-28T10:00:00 &minlatitude=34.245454&maxlatitude=41.744376&minlongitude=19.359372&maxlongitude=29.664913&format=xml";
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
-            String timeNow = formatter.format(LocalDateTime.now(Clock.systemUTC())); // endtime
-            String xHoursAgo = formatter.format(LocalDateTime.now(Clock.systemUTC()).minusHours(3)); // starttime
+        String timeNow = formatter.format(LocalDateTime.now(Clock.systemUTC())); // endtime
+        String xHoursAgo = formatter.format(LocalDateTime.now(Clock.systemUTC()).minusHours(Parameters.last6Hours)); // starttime
 
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme(Parameters.HTTPS)
-                    .authority(Parameters.BASEURL)
-                    .appendPath(Parameters.PATH_FDSNWS)
-                    .appendPath(Parameters.PATH_EVENT)
-                    .appendPath(Parameters.PATH_1)
-                    .appendPath(Parameters.PATH_QUERY)
-                    .appendQueryParameter(Parameters.STARTTIME, xHoursAgo)
-                    .appendQueryParameter(Parameters.ENDTIME, timeNow)
-                    .appendQueryParameter(Parameters.MINLAT, Parameters.MINLAT_GREECE)
-                    .appendQueryParameter(Parameters.MAXLAT, Parameters.MAXLAT_GREECE)
-                    .appendQueryParameter(Parameters.MINLONG, Parameters.MINLONG_GREECE)
-                    .appendQueryParameter(Parameters.MAXLONG, Parameters.MAXLONG_GREECE);
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(Parameters.HTTPS)
+                .authority(Parameters.BASEURL)
+                .appendPath(Parameters.PATH_FDSNWS)
+                .appendPath(Parameters.PATH_EVENT)
+                .appendPath(Parameters.PATH_1)
+                .appendPath(Parameters.PATH_QUERY)
+                .appendQueryParameter(Parameters.STARTTIME, xHoursAgo)
+                .appendQueryParameter(Parameters.ENDTIME, timeNow)
+                .appendQueryParameter(Parameters.MINLAT, Parameters.MINLAT_GREECE)
+                .appendQueryParameter(Parameters.MAXLAT, Parameters.MAXLAT_GREECE)
+                .appendQueryParameter(Parameters.MINLONG, Parameters.MINLONG_GREECE)
+                .appendQueryParameter(Parameters.MAXLONG, Parameters.MAXLONG_GREECE);
 
-            String finalULR = builder.build().toString();
+        String finalULR = builder.build().toString();
 
         if (BuildConfig.DEBUG) Log.d("Quake","finalURL = " +finalULR);
 
 
         // Formulate the request and handle the response.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, finalULR,
-                    response -> {
-                        // Do something with the response
-                        Log.d("myTag", "ResponseLog = " + response);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalULR,
+                response -> {
+                    // Do something with the response
+                    Log.d("myTag", "ResponseLog = " + response);
 
-                        QuakemlParser qml = new QuakemlParser();
+                    QuakemlParser qml = new QuakemlParser();
 
-                        try {
-                            InputStream input = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
-                            qml.startParser(input);
-
-                            quakes.putAll(qml.getQuakes());
-                            callback.onSuccess(quakes);
-
-
-                        } catch (XmlPullParserException | IOException e) {
-                            e.printStackTrace();
+                    try {
+                        if (response.isEmpty()) {
+                            throw new IOException();
                         }
-                    },
-                    error -> {
-                        // Handle error
-                        Log.d("myTag","Failed: " +error);
-                    });
 
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        InputStream input = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
+                        qml.startParser(input);
 
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
+                        quakes.putAll(qml.getQuakes());
+                        callback.onSuccess(quakes);
 
-//        mainHandler.post(run());
+                    } catch (XmlPullParserException | IOException e) {
+                        Toast.makeText(context, "Failed: " +e.toString(), Toast.LENGTH_SHORT).show();
+
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    // Handle error
+                    Log.d("myTag","Failed: " +error);
+                });
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     @Override
     public LinkedHashMap<String, Quake> onSuccess(LinkedHashMap<String, Quake> quakesToRet) {
         quakesToRet = quakes;
-        Log.d("myTag","Size QuakesRet: " +quakesToRet.size());
         return quakesToRet;
     }
 }

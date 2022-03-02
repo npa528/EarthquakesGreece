@@ -26,7 +26,7 @@ public interface Parameters {
     String MAXLAT = "maxlatitude";
     String MINLONG = "minlongitude";
     String MAXLONG = "maxlongitude";
-    String FORMAT = "format";
+    int last6Hours = 6;
 
     String HTTPS = "https";
     String BASEURL = "eida.gein.noa.gr";
@@ -36,8 +36,8 @@ public interface Parameters {
     String PATH_QUERY = "query";
 
     /* Params Coordinates for Greece */
-    String MINLAT_GREECE = "34.245454";
-    String MAXLAT_GREECE = "41.744376";
-    String MINLONG_GREECE = "19.359372";
-    String MAXLONG_GREECE = "29.664913";
+    String MINLAT_GREECE = "32.959351844878924";
+    String MAXLAT_GREECE = "41.978012322308516";
+    String MINLONG_GREECE = "18.966053991350208";
+    String MAXLONG_GREECE = "30.497690731896405";
 }

@@ -58,4 +58,5 @@ public class QuakeListAdapter extends ArrayAdapter<Quake> {
 
         return convertView;
     }
+
 }

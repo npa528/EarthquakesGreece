@@ -16,9 +16,6 @@ import lombok.Getter;
 
 public class QuakemlParser {
 
-//    @Getter
-//    private final ArrayList<Quake> quakes= new ArrayList<>();
-
     @Getter
     private final LinkedHashMap<String, Quake> quakes = new LinkedHashMap<>();
 
@@ -64,8 +61,8 @@ public class QuakemlParser {
         String date = "";
         double mag = 0;
         double depth = 0;
-        float longitude = 0;
-        float latitude = 0;
+        double longitude = 0;
+        double latitude = 0;
 
         parser.require(XmlPullParser.START_TAG, null, Parameters.EVENT_TAG);
         eventId = parser.getAttributeValue(null, Parameters.EVENT_PUBLICID_TAG);
@@ -97,11 +94,11 @@ public class QuakemlParser {
 //                    if (BuildConfig.DEBUG) Log.d("Quake","Time = " +date);
 
                 } else if (parser.getName().equals(Parameters.LONGITUDE_TAG)) {
-                    longitude = Float.parseFloat(getValue(parser, Parameters.VALUE_TAG));
+                    longitude = Double.parseDouble(getValue(parser, Parameters.VALUE_TAG));
 //                    if (BuildConfig.DEBUG) Log.d("Quake","Longitude = " +longitude);
 
                 } else if (parser.getName().equals(Parameters.LATITUDE_TAG)) {
-                    latitude = Float.parseFloat(getValue(parser, Parameters.VALUE_TAG));
+                    latitude = Double.parseDouble(getValue(parser, Parameters.VALUE_TAG));
 //                    if (BuildConfig.DEBUG) Log.d("Quake","Latitude = " +latitude);
 
                 } else if (parser.getName().equals(Parameters.DEPTH_TAG)) {
@@ -125,6 +122,16 @@ public class QuakemlParser {
                         if (BuildConfig.DEBUG) Log.d("Quake","Skip event = " + eventId);
                         return;
                     }
+
+                } else if (parser.getName().equals(Parameters.TYPE_TAG) && parser.getDepth() == 4) {
+                    // that means <type>earthquake</type> or not
+                    String type = parser.nextText();
+
+                    if (!type.equals(Parameters.EARTHQUAKE_VALUE)) {
+                        if (BuildConfig.DEBUG) Log.d("Quake","Skip event = " + eventId);
+                        return;
+                    }
+
                 }
         }
 

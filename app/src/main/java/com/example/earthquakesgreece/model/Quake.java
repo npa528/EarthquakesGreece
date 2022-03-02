@@ -26,13 +26,13 @@ public class Quake {
     private final double depth;
 
     @Getter
-    private final float longitude;
+    private final double longitude;
 
     @Getter
-    private final float latitude;
+    private final double latitude;
 
 
-    public Quake(String eventId, String regionName, String date, double magnitude, double depth, float longitude, float latitude) {
+    public Quake(String eventId, String regionName, String date, double magnitude, double depth, double longitude, double latitude) {
         this.eventId = eventId;
         this.regionName = regionName;
 
